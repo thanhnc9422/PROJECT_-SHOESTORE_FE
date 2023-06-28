@@ -1,0 +1,32 @@
+.item-carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 20px 70px;
+  div {
+    height: 100%;
+    width: 100%;
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .name-shop {
+    height: fit-content;
+    font-size: 10vw;
+    font-weight: bolder;
+    position: absolute;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+  }
+  .sub-name-shop{
+    height: fit-content;
+    font-size: 2vw;
+    font-weight: bolder;
+    position: absolute;
+    text-align: center;
+    color: pink;
+  
+  }
+}

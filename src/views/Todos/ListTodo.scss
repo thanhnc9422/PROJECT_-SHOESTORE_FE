@@ -1,0 +1,21 @@
+@mixin ss-btn {
+    border: gray solid 1px;
+    border-radius: 5%;
+    margin-left:5px; 
+}
+
+
+.app-todos{
+    button{
+        @include ss-btn;
+    }
+    .show-todos{
+        .show-item-todo{
+        margin: 20px 0 0 20px;
+         button{
+         @include ss-btn;
+         }
+        }
+
+    }
+}

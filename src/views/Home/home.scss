@@ -1,0 +1,29 @@
+.img-item{
+width:100%;
+height: 100%;
+}
+.content-shoe{
+ margin: 10px 80px;
+    .item-shoe{
+        position: relative;
+        display: flex;
+        .name-shoe{
+            top: 5px;
+            font-size: 1.5vw;
+            width: 100%;
+            position: absolute;
+            text-align: center;
+        }
+        .price-shoe{
+            bottom: 5px;
+            font-size: 1.5vw;
+            width: 100%;
+            position: absolute;
+            text-align: center;
+        }
+    }
+}
+.paging {
+    text-align: center;
+    margin-bottom: 10px;
+}
