@@ -1,10 +1,16 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Modal, Select, Space } from "antd";
+import { async } from "@firebase/util";
+import { Button, Card, Form, Input, Modal, Select, Space } from "antd";
 import { Option } from "antd/es/mentions";
+import axios from "axios";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { update } from "../../store/actions/userActions";
 
-const TextShoe = ({ shoeName, shoeSrc }) => {
+const TextShoe = ({ shoe , type, updateShoe}) => {
     const [visible, setVisible] = useState(false);
+    const [form] = Form.useForm();
+    const dispatch = useDispatch();
   const handleShowModal = () => {
     setVisible(true);
   };
@@ -12,11 +18,19 @@ const TextShoe = ({ shoeName, shoeSrc }) => {
   const handleOk = () => {
     setVisible(false);
   };
+  const handleSubmit = () => {
+    updateShoe(form.getFieldValue().name, form.getFieldValue().price, shoe.id)
+    form.setFieldsValue({
+      name: null,
+      price: null,
+    });
+
+  }
   return (
     <div>
       <Space>
-        <img alt="" className="img-item" src={"./images/" + shoeSrc + ".png"} />
-        <Card title={shoeName} size="small">
+       {type === "show"? <> <img alt="" className="img-item" src={"./images/" + shoe.src + ".png"} />
+        <Card title={shoe.name} size="small">
           <p>
             Gucci products are made with carefully selected materials. Please
             handle with care for longer product life. Protect from direct light,
@@ -57,8 +71,45 @@ const TextShoe = ({ shoeName, shoeSrc }) => {
     </Button>,]}
         >
             <img style={{ maxWidth: '100%', maxHeight: '100%' }} src="./images/size-guide.png"></img>
-        </Modal>
+        </Modal></> :<>
+
+
+        <img style={{width : 200}} alt="" className="img-item" src={"./images/" + shoe.src + ".png"} />
+        <Card title="Manage shoe" size="small">
+        <Form
+        form={form}
+    onFinish={() => handleSubmit()}
+    name="basic"
+    labelCol={{ span: 10 }}
+    wrapperCol={{ span: 14 }}
+    style={{ maxWidth: 800 }}
+    initialValues={{ remember: true }}
+    // onFinish={onFinish}
+    // onFinishFailed={onFinishFailed}
+    autoComplete="off"
+  >
+    <Form.Item
+      label="New name"
+      name="name">
+      <Input placeholder={shoe.name}/>
+    </Form.Item>
+
+    <Form.Item
+      label="New price"
+      name="price" >
+      <Input placeholder={shoe.price}/>
+    </Form.Item>
+   
+    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+      <Button type="primary" htmlType="Save">
+        Save
+      </Button>
+    </Form.Item>
+  </Form>
+        </Card>
+        </>}
       </Space>
+     
     </div>
   );
 };

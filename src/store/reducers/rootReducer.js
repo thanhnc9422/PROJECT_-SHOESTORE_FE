@@ -1,6 +1,7 @@
 const initState = {
   user: undefined,
-  isLoggedIn: false
+  items: undefined,
+  isUpdate: false,
 };
 const rootReducer = (state = initState, action) => {
     switch (action.type) {
@@ -8,14 +9,19 @@ const rootReducer = (state = initState, action) => {
           return {
             ...state,
             user: action.payload,
-            isLoggedIn: true
+           
           };
         case 'LOGOUT':
           return {
             ...state,
             user: null,
-            isLoggedIn: false
+            
           };
+          case 'UPDATE':
+            return{
+              ...state,
+              isUpdate: true,
+            } ;
         // Các action khác
         default:
           return state;

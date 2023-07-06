@@ -9,9 +9,9 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import TextShoe from "../../components/Text/TextShoe";
 
 const Home = () => {
-  const [shoe, setShoe] = useState([]);
-  const [shoePage, setShoePage] = useState([]);
-  const [visible, setVisible] = useState();
+  const [shoe, setShoe] = useState();
+  const [shoePage, setShoePage] = useState();
+  const [visible, setVisible] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,8 +24,11 @@ const Home = () => {
     };
     fetchData();
   }, []);
+
     useEffect(() => {
+      if(shoePage !== undefined){
         setVisible(Array(shoePage.length).fill(false));
+      }
     }
   ,[shoePage]);
 
@@ -65,7 +68,7 @@ const Home = () => {
             <div> Content</div>
             <div className="content-shoe">
               <Row gutter={[40, 16]}>
-                {shoePage.map((shoePage, index) => (
+              {shoePage?<>{shoePage.map((shoePage, index) => (
                   <>
                   <Col xs={{span : 12}} lg={{span : 8}} >
                     <div className="item-shoe">
@@ -83,7 +86,7 @@ const Home = () => {
                         closable={false}
                         centered
                       >
-                       <TextShoe shoeName={shoePage.name} shoeSrc={shoePage.src}/>
+                       <TextShoe shoe = {shoePage} type = {"show"}/>
                       </Modal>
 
                       <div className="price-shoe">
@@ -102,7 +105,8 @@ const Home = () => {
                     </div>
                   </Col>
                   </>
-                ))}
+                ))}</>:<></>}
+                {}
                 
               </Row>
             </div>

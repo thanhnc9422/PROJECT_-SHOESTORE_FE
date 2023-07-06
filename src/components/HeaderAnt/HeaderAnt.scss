@@ -8,4 +8,10 @@
         padding: 24px;
         minHeight: 380px;
     }
- 
+ .menu{
+    position: relative;
+    .info{
+       position: absolute;
+       right: 0px;
+    }
+ }

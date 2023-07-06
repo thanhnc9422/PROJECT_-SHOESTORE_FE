@@ -11,3 +11,9 @@ export const logout = () => {
     type: 'LOGOUT',
   };
 };
+export const update = () => {
+  return {
+    type: 'UPDATE',
+  };
+};
+

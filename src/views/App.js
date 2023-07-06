@@ -8,6 +8,7 @@ import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
 import ListPerson from './ListPersons/ListPerson';
 import Home from './Home/Home';
 import Login from './Login/Login';
+import ListShoes from './ListShoes/ListShoes';
 function App() {
   return (
     <Router>
@@ -23,6 +24,8 @@ function App() {
       <Route path="/login" element={<Login/>}>
       </Route>
       <Route path="/home" element={<Home/>}>
+      </Route>
+      <Route path="/listshoes" element={<ListShoes/>}>
       </Route>
     </Routes>
 
