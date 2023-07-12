@@ -75,7 +75,7 @@ const Home = () => {
                       <img
                         alt=""
                         className="img-item"
-                        src={"./images/" + shoePage.src + ".png"}
+                        src={shoePage.src}
                       />
                       <div className="name-shoe">{shoePage.name}</div>
                       <Modal

@@ -40,7 +40,7 @@ const HeaderAnt = () => {
   ];
   return (
     <div className="layout-ant">
-      <Affix offsetTop={-20}>
+      <Affix offsetTop={0}>
         <Header>
           <div className="demo-logo" />
           <Menu theme="dark" mode="horizontal" className="menu">
