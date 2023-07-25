@@ -13,16 +13,25 @@ import {
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import { NavLink } from "react-router-dom";
 import "./HeaderAnt.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UserOutlined } from "@ant-design/icons";
+import { removeUser } from "../../redux/userSlice";
+import { async } from "@firebase/util";
+import axios from "axios";
 const HeaderAnt = () => {
-  const user = useSelector((state) => state.user);
-
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+ const handleLogout = async () =>{
+  if(user !== null){
+     dispatch(removeUser());
+     const response = await axios.get("http://localhost:8080/user/logout",{withCredentials: true});
+  } 
+ }
   const item01 = [
     {
       key: "1",
       label: (
-        <NavLink to="/login" activeClassName="active" exact={true}>
+        <NavLink to="/login" activeClassName="active" exact={true} onClick={()=> handleLogout()}>
           {user ? <> Logout</> : <>Login</>}
         </NavLink>
       ),

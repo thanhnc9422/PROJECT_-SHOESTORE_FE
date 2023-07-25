@@ -9,6 +9,7 @@ import ListPerson from './ListPersons/ListPerson';
 import Home from './Home/Home';
 import Login from './Login/Login';
 import ListShoes from './ListShoes/ListShoes';
+import Elasticsearch from './elasticsearch/Elasticsearch';
 function App() {
   return (
     <Router>
@@ -26,6 +27,8 @@ function App() {
       <Route path="/home" element={<Home/>}>
       </Route>
       <Route path="/listshoes" element={<ListShoes/>}>
+      </Route>
+      <Route path="/elasticsearch" element={<Elasticsearch/>}>
       </Route>
     </Routes>
 

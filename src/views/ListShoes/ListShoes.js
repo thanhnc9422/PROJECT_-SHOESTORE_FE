@@ -99,13 +99,14 @@ const ListShoes = () => {
     handleAfterSave();
   };
   const updateShoe = async (name, price, id) => {
+    console.log("hihihi")
     const formData = new FormData();
     formData.append("name", name);
     formData.append("price", price);
     try {
       const response = await axios.put(
         "http://localhost:8080/updateShoe/" + id,
-        formData
+        formData,{withCredentials: true}
       );
       fetchData();
       handleSearch(searchName);

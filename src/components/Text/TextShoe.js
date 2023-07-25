@@ -6,7 +6,6 @@ import Upload from "antd/es/upload/Upload";
 import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { update } from "../../store/actions/userActions";
 
 const TextShoe = ({ shoe, type, funcShoe }) => {
   const [messageApi, contextHolder] = message.useMessage();

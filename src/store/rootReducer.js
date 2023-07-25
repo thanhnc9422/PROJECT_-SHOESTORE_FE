@@ -4,6 +4,7 @@ const initState = {
   isUpdate: false,
 };
 const rootReducer = (state = initState, action) => {
+
     switch (action.type) {
         case 'LOGIN':
           return {
