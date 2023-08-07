@@ -2,37 +2,25 @@ import {
   DeleteOutlined,
   EditOutlined,
   FileAddOutlined,
-  PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { getDownloadURL, ref, uploadBytesResumable } from "@firebase/storage";
-import { async } from "@firebase/util";
-import {
-  Avatar,
-  Button,
-  Image,
-  Layout,
-  List,
-  message,
-  Modal,
-  Space,
-} from "antd";
-import { Content } from "antd/es/layout/layout";
-import Search from "antd/es/transfer/search";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { Avatar, Button, Layout, List, message, Modal } from "antd";
 import HeaderAnt from "../../components/HeaderAnt/HeaderAnt";
 import TextShoe from "../../components/Text/TextShoe";
+import React, { useEffect, useState } from "react";
+import { Content } from "antd/es/layout/layout";
 import { storage } from "../../FirebaseConfig";
+import Search from "antd/es/transfer/search";
+import axios from "axios";
 import "./ListShoes.scss";
+
 const ListShoes = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const [imageUrl, setImageUrl] = useState("");
-  const [shoes, setShoes] = useState();
-  const [search, setSearch] = useState();
-  const [popup, setPopup] = useState();
   const [searchName, setSearchName] = useState();
+  const [search, setSearch] = useState();
+  const [shoes, setShoes] = useState();
+  const [popup, setPopup] = useState();
 
   const fetchData = async () => {
     try {
@@ -47,9 +35,7 @@ const ListShoes = () => {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   setSearch(shoes);
-  // }, []);
+//* ================================= HANDLE SEARCH =====================================
   const handleSearch = (event) => {
     setSearchName(event.target.value);
     if (event.target.value === "") {
@@ -62,6 +48,8 @@ const ListShoes = () => {
       );
     }
   };
+
+  //* ================================= HANDLE ADD ======================================
   const metadata = {
     contentType: "image/jpeg",
   };
@@ -71,51 +59,62 @@ const ListShoes = () => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("price", price);
-    const demoUrl = await getDownloadURL(ref(storage, "images/"+file.name)).then(
-      (url) => {
-        formData.append("src", url);
-      }
-    );
+    const demoUrl = await getDownloadURL(
+      ref(storage, "images/" + file.name)
+    ).then((url) => {
+      formData.append("src", url);
+    });
     console.log(formData.get("src"));
     try {
       const response = await axios.post(
         "http://localhost:8080/addShoe",
-        formData);
-        fetchData();
-        setSearch(searchName);
+        formData,
+        { withCredentials: true }
+      );
+      fetchData();
+      setSearch(searchName);
     } catch (error) {
       console.log(error);
     }
     handleAfterSave();
   };
+
+  //* ================================ HANDLE DELETE ====================================
   const deleteShoe = async (id) => {
     try {
-      const response = await axios.delete("http://localhost:8080/deleteShoe/"+id);
-      fetchData();
-      handleSearch(searchName);
-    } catch (error) {
-      console.log(error);
-    }
-    handleAfterSave();
-  };
-  const updateShoe = async (name, price, id) => {
-    console.log("hihihi")
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("price", price);
-    try {
-      const response = await axios.put(
-        "http://localhost:8080/updateShoe/" + id,
-        formData,{withCredentials: true}
+      const response = await axios.delete(
+        "http://localhost:8080/deleteShoe/" + id,
+        { withCredentials: true }
       );
       fetchData();
       handleSearch(searchName);
     } catch (error) {
       console.log(error);
     }
-   handleAfterSave();
+    handleAfterSave();
   };
 
+  //* =============================== HANDLE UPDATE =====================================
+  const updateShoe = async (name, price, id) => {
+    console.log("hihihi");
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("price", price);
+    try {
+      const response = await axios.put(
+        "http://localhost:8080/updateShoe/" + id,
+        formData,
+        { withCredentials: true }
+      );
+      fetchData();
+      handleSearch(searchName);
+    } catch (error) {
+      console.log(error);
+    }
+    handleAfterSave();
+  };
+
+    //* ============================ HANDLE LOADING =====================================
   const handleAfterSave = () => {
     messageApi.open({
       key: "hehe",
@@ -124,8 +123,8 @@ const ListShoes = () => {
       duration: 2,
     });
     setPopup();
-  }
-
+  };
+  //* ============================= SHOW MODAL FOR CRUD =================================
   const ShowModal = (item, visible, type) => {
     if (visible === false) {
       setPopup();
@@ -139,14 +138,14 @@ const ListShoes = () => {
           centered
           footer={null}
         >
-        <div style={{textAlign: "center"}}>
-          {type === "edit" ? (
-            <TextShoe funcShoe={updateShoe} shoe={item} type={"edit"} />
-          ) : type === "add" ? (
-            <TextShoe funcShoe={addShoe} shoe={item} type={"add"} />
-          ) : (
-            <TextShoe funcShoe={deleteShoe} shoe={item} type={"delete"} />
-          )}
+          <div style={{ textAlign: "center" }}>
+            {type === "edit" ? (
+              <TextShoe funcShoe={updateShoe} shoe={item} type={"edit"} />
+            ) : type === "add" ? (
+              <TextShoe funcShoe={addShoe} shoe={item} type={"add"} />
+            ) : (
+              <TextShoe funcShoe={deleteShoe} shoe={item} type={"delete"} />
+            )}
           </div>
         </Modal>
       );
@@ -158,11 +157,11 @@ const ListShoes = () => {
       return url;
     });
   };
+
   return (
     <div>
       {contextHolder}
       <Layout>
-        {/* <Image src={ }></Image> */}
         <HeaderAnt />
         <Content>
           <Search
@@ -171,7 +170,6 @@ const ListShoes = () => {
             enterButton={<SearchOutlined />}
             onChange={(event) => handleSearch(event)}
           />
-
           <List
             className="list-shoes"
             itemLayout="horizontal"

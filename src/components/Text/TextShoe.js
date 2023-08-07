@@ -1,18 +1,14 @@
 import { SearchOutlined, UploadOutlined } from "@ant-design/icons";
-import { async } from "@firebase/util";
 import { Button, Card, Form, Input, message, Modal, Select, Space } from "antd";
 import { Option } from "antd/es/mentions";
 import Upload from "antd/es/upload/Upload";
-import axios from "axios";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 const TextShoe = ({ shoe, type, funcShoe }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [visible, setVisible] = useState(false);
   const [file, setFile] = useState();
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
   const handleShowModal = () => {
     setVisible(true);
   };
@@ -21,6 +17,18 @@ const TextShoe = ({ shoe, type, funcShoe }) => {
     setVisible(false);
   };
   const handleSubmit = () => {
+   
+    if (type === "show"){
+      messageApi.open({
+        type: "success",
+        content: "Loaded!",
+        duration: 2,
+      });
+      funcShoe(
+        shoe.id
+      )
+      return;
+    }
     messageApi.open({
       key: "hehe",
       type: "loading",
@@ -51,15 +59,12 @@ const TextShoe = ({ shoe, type, funcShoe }) => {
   };
   return (
     <div>
+    {contextHolder}
       <Space>
         {type === "show" ? (
+          /* =========================== MODAL VIEW ========================== */
           <>
-            {" "}
-            <img
-              alt=""
-              className="img-item"
-              src={shoe.src}
-            />
+            <img alt="" className="img-item" src={shoe.src} />
             <Card title={shoe.name} size="small">
               <p>
                 Gucci products are made with carefully selected materials.
@@ -95,6 +100,7 @@ const TextShoe = ({ shoe, type, funcShoe }) => {
                   VIEW SIZE GUIDE
                 </Button>
               </Space.Compact>
+              <Button style={{marginTop:'5px'}} onClick={() => handleSubmit()}>ADD TO CART</Button>
             </Card>
             <Modal
               visible={visible}
@@ -110,11 +116,13 @@ const TextShoe = ({ shoe, type, funcShoe }) => {
             >
               <img
                 style={{ maxWidth: "100%", maxHeight: "100%" }}
-                src="./images/size-guide.png"
+                src="./images/size-guide.png" alt=""
               ></img>
             </Modal>
+        
           </>
         ) : type === "edit" ? (
+          /* =========================== MODAL EDIT ========================== */
           <>
             <img
               style={{ width: 200 }}
@@ -131,18 +139,14 @@ const TextShoe = ({ shoe, type, funcShoe }) => {
                 wrapperCol={{ span: 14 }}
                 style={{ maxWidth: 800 }}
                 initialValues={{ remember: true }}
-                // onFinish={onFinish}
-                // onFinishFailed={onFinishFailed}
                 autoComplete="off"
               >
                 <Form.Item label="New name" name="name">
                   <Input defaultValue={shoe.name} />
                 </Form.Item>
-
                 <Form.Item label="New price" name="price">
                   <Input defaultValue={shoe.price} />
                 </Form.Item>
-
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                   {contextHolder}
                   <Button type="primary" htmlType="Save">
@@ -153,6 +157,7 @@ const TextShoe = ({ shoe, type, funcShoe }) => {
             </Card>
           </>
         ) : type === "add" ? (
+          /* =========================== MODAL ADD =========================== */
           <>
             <Card title="Manage shoe" size="small">
               <Form
@@ -195,6 +200,7 @@ const TextShoe = ({ shoe, type, funcShoe }) => {
             </Card>
           </>
         ) : (
+          /* ========================= MODAL DELETE ========================== */
           <>
             Do you want to delete this shoe?
             <Button onClick={() => handleSubmit()}>Confirm</Button>

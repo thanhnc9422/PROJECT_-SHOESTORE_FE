@@ -1,36 +1,44 @@
-import { signInWithPopup } from "@firebase/auth";
-import { FacebookAuthProvider } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { Button, Form, Input, notification, Space } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { auth, provider } from "../../FirebaseConfig";
-import { login } from "../../store/userActions";
-import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, notification, Space } from "antd";
+import { FacebookAuthProvider } from "firebase/auth";
 import { FacebookOutlined } from "@ant-design/icons";
-import "../../styles/global.scss";
-import "./Login.scss";
-import axios from "axios";
+import { signInWithPopup } from "@firebase/auth";
 import { addUser } from "../../redux/userSlice";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import "../../styles/global.scss";
+import axios from "axios";
+import "./Login.scss";
 
 const Login = () => {
   const myState = useSelector((state) => state.user.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [uidFb, setUidFb] = useState();
   const [loading, setLoading] = useState(Array(1).fill(false));
   const [user, setUser] = useState();
   const [form] = Form.useForm();
-  //* ============================ HANDLE LOGIN BY FACEBOOK ============================
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //* ============================ HANDLE LOGIN BY FACEBOOK =============================
   const handleLogin = async (index) => {
     handleLoading(index);
     await signInWithPopup(auth, provider)
       .then((result) => {
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
+        if(credential== null){
+          console.log("not found credential");
+        }
+        if(accessToken== null){
+          console.log("not found accessToken");
+        }
         fetch(
           `https://graph.facebook.com/${result.user.providerData[0].uid}/picture?type=large&access_token=${accessToken}`
         )
           .then((response) => response.blob())
           .then((blob) => {
+            setUidFb(result.user.providerData[0].uid);
             setUser({
               displayName: result.user.displayName,
               email: result.user.email,
@@ -41,11 +49,25 @@ const Login = () => {
       .catch((err) => {
         console.log(err);
       });
+
+
+      const response = await axios.post(
+        "http://localhost:8080/login",
+        {
+         uidFb : "result.user.providerData[0].uid",
+        },
+        { withCredentials: true}
+      );
+      if (response.data === "NOT FOUND") {
+        notification.error({
+          message: "Lỗi đăng nhập",
+          description: "Username hoặc password không chính xác",
+        });
   };
-  //* ============================ HANDLE LOGIN BY USERNAME AND PASSWORD ============================
+}
+  //* ============================ HANDLE LOGIN BY USERNAME AND PASSWORD ================
   const onFinish = async (index) => {
     handleLoading(index);
-
     const username = form.getFieldValue().username;
     const password = form.getFieldValue().password;
     const response = await axios.post(
@@ -64,6 +86,7 @@ const Login = () => {
       handleLoading(-1);
     } else {
       setUser({
+        id: response.data.id,
         displayName: response.data.fullname,
         email: response.data.username,
         urlAvatar: "",
@@ -71,7 +94,7 @@ const Login = () => {
       handleLoading(-1);
     }
   };
-  //* ============================ WHEN USER CHANGE WILL BE REDIRECT TO /HOME ============================
+  //* ===================== LOADING AND STORE USER DATA TO REDUX ========================
   const handleLoading = (index) => {
     if (index < 0) {
       setLoading(Array(1).fill(false));
@@ -90,10 +113,10 @@ const Login = () => {
       navigate("/home");
     }
   }, [user]);
-console.log(myState)
+
   return (
     <div className="login-main">
-      {/* ============================ LOGO ============================ */}
+{/* ============================ LOGO ============================= */}
       <Space direction="vertical" align="center" className="login-item">
         <div className="header">
           <div className="title">
@@ -101,7 +124,7 @@ console.log(myState)
             <img src="./images/logo.png"></img>
           </div>
         </div>
-        {/* ============================ UI LOGIN BY FACEBOOK ============================ */}
+{/* ====================== UI LOGIN BY FACEBOOK =================== */}
         <Button
           type="default"
           size="large"
@@ -111,7 +134,7 @@ console.log(myState)
         >
           Sign In With Facebook
         </Button>
-        {/* ============================ UI LOGIN BY USERNAME AND PASSWORD ============================ */}
+{/* ============= UI LOGIN BY USERNAME AND PASSWORD =============== */}
 
         <div>CONTINUE WITH YOUR ACCOUNT</div>
         <Form

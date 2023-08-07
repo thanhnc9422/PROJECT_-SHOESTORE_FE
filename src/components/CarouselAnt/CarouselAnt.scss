@@ -1,4 +1,5 @@
 .item-carousel {
+
   position: relative;
   display: flex;
   align-items: center;
@@ -9,6 +10,7 @@
     img {
       height: 100%;
       width: 100%;
+      border-radius: 15px;
     }
   }
   .name-shop {
